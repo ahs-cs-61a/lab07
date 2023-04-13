@@ -1,9 +1,9 @@
-# lab06 tests
+# lab07 tests
 
 
 # IMPORTS
 
-import labs.lab06 as lab, tests.wwpd_storage as s
+import labs.lab07 as lab, tests.wwpd_storage as s
 import re, inspect, sys, git
 from io import StringIO 
 

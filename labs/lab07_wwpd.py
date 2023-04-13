@@ -1,4 +1,4 @@
-# lab06 WWPD?
+# lab07 WWPD?
 
 
 # IMPORTS
@@ -95,71 +95,63 @@ def wwpd(name, question_set, stored_list):
 
 # REFERENCE FUNCTIONS, CLASSES, METHODS, SEQUENCES, ETC.
 
-class Link:
-    """A linked list.
-
-    >>> s = Link(1)
-    >>> s.first
-    1
-    >>> s.rest is Link.empty
-    True
-    >>> s = Link(2, Link(3, Link(4)))
-    >>> s.first = 5
-    >>> s.rest.first = 6
-    >>> s.rest.rest = Link.empty
-    >>> s                                    # Displays the contents of repr(s)
-    Link(5, Link(6))
-    >>> s.rest = Link(7, Link(Link(8, Link(9))))
-    >>> s
-    Link(5, Link(7, Link(Link(8, Link(9)))))
-    >>> print(s)                             # Prints str(s)
-    <5 7 <8 9>>
+class Tree:
     """
-    empty = ()
+    >>> t = Tree(3, [Tree(2, [Tree(5)]), Tree(4)])
+    >>> t.label
+    3
+    >>> t.branches[0].label
+    2
+    >>> t.branches[1].is_leaf()
+    True
+    """
 
-    def __init__(self, first, rest=empty):
-        assert rest is Link.empty or isinstance(rest, Link)
-        self.first = first
-        self.rest = rest
+    def __init__(self, label, branches=[]):
+        for b in branches:
+            assert isinstance(b, Tree)
+        self.label = label
+        self.branches = list(branches)
+
+    def is_leaf(self):
+        return not self.branches
 
     def __repr__(self):
-        if self.rest is not Link.empty:
-            rest_repr = ', ' + repr(self.rest)
+        if self.branches:
+            branch_str = ', ' + repr(self.branches)
         else:
-            rest_repr = ''
-        return 'Link(' + repr(self.first) + rest_repr + ')'
+            branch_str = ''
+        return 'Tree({0}{1})'.format(self.label, branch_str)
 
     def __str__(self):
-        string = '<'
-        while self.rest is not Link.empty:
-            string += str(self.first) + ' '
-            self = self.rest
-        return string + str(self.first) + '>'
+        def print_tree(t, indent=0):
+            tree_str = '  ' * indent + str(t.label) + "\n"
+            for b in t.branches:
+                tree_str += print_tree(b, indent + 1)
+            return tree_str
+        return print_tree(self).rstrip()
+    
     
 # lab07: https://inst.eecs.berkeley.edu/~cs61a/su22/disc/disc07/
 
-link = Link(1, Link(2, Link(3)))
-
-lnk = Link(1)
-lnk.rest = lnk
-
-l = Link(2, Link(3, Link(4)))
-l2 = Link(1, l)
+t = Tree(1, [Tree(2)])
+tr = Tree(2, [Tree(2)])
+tr.branches.append(Tree(4, [Tree(8)]))
 
 
 # QUESTION SET - ELEMENT FORMAT: [<QUESTION NUMBER>, <INITIAL PRINTS> (usually empty), <QUESTION>, <ANSWER>]
 # INSPECT MODULE - convert function/class body into String: https://docs.python.org/3/library/inspect.html 
 
-linked_lists_qs = [
-    [1, ">>> link = Link(1, Link(2, Link(3)))", ">>> link.first", str(link.first)],
-    [2, "", ">>> link.rest.first", str(link.rest.first)],
-    [3, "", ">>> link.rest.rest.rest is Link.empty", str(link.rest.rest.rest is Link.empty)],
-    [4, ">>> link.rest = link.rest.rest", ">>> link.rest.first", "3"],
-    [5, ">>> lnk = Link(1)\n>>> lnk.rest = lnk", ">>> lnk.rest.rest.rest.rest.first", str(lnk.rest.rest.rest.rest.first)],
-    [6, ">>> l = Link(2, Link(3, Link(4)))\n>>> l2 = Link(1, l)", ">>> l2.first", str(l2.first)],
-    [7, "", ">>> l2.rest.first", str(l2.rest.first)]
+trees_qs = [
+    [1, "", ">>> t = Tree(1, Tree(2))", "error"],
+    [2, ">>> t = Tree(1, [Tree(2)])", ">>> t.label", str(t.label)]
+    [3, "", ">>> t.branches[0]", repr(t.branches[0])],
+    [4, "", ">>> t.branches[0].label", str(t.branches[0].label)],
+    [5, ">>> t.label = t.branches[0].label", "t", "Tree(2, [Tree(2)])"]
+    [6, ">>> t.branches.append(Tree(4, [Tree(8)]))", ">>> len(t.branches)", "2"],
+    [7, "", ">>> t.branches[0]", repr(tr.branches[0])],
+    [8, "", ">>> t.branches[1]", repr(tr.branches[1])]
 ]
-all_qs = [linked_lists_qs]
+all_qs = [trees_qs]
 
 for set in all_qs:
     for q in set:
@@ -168,5 +160,5 @@ for set in all_qs:
 
 # WWPD? QUESTIONS
 
-def wwpd_linked_lists():
-    wwpd("Linked Lists", linked_lists_qs, st)
+def wwpd_trees():
+    wwpd("Linked Lists", trees_qs, st)

@@ -9,11 +9,11 @@ This assignment merges problems from discussions, labs, and homeworks into one; 
   
 lecture slides: 
   
-- linked lists: https://docs.google.com/presentation/d/1uYzQsjc0raiBXYSO25L4IJGT-orad_te3VGuZqCIXxs/edit?usp=sharing 
+- trees: https://docs.google.com/presentation/d/1VlsyEsYoeNJKBfvwHIrj7IjhVdFB46mYJvj4f5HUC7o/edit?usp=sharing 
   
 optional lecture recordings:
 
-- linked lists: https://youtube.com/playlist?list=PLx38hZJ5RLZdeag_SwSSrS34mfxprHcbK 
+- trees: https://www.youtube.com/watch?v=vg9tCzw2hPc&list=PLx38hZJ5RLZfCs3hoxU56hOMi-Rt900pT 
   
 reminders: 
   
@@ -27,10 +27,11 @@ reminders:
 
 test commands:
   
-- test_remove_all
-- test_slice_link
-- test_store_digits
-- test_every_other
-- test_duplicate_link
-- test_deep_map
-- test_link_pop
+- test_height
+- test_max_path_sum
+- test_find_path
+- test_prune_small
+- test_cumulative_mul
+- test_d_leaves
+- test_has_path
+- test_add_trees
