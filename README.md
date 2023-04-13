@@ -1,4 +1,4 @@
-# lab06: Linked Lists
+# lab07: Trees
   
 This assignment merges problems from discussions, labs, and homeworks into one; refer to these links for problem descriptions and requirements:
   
