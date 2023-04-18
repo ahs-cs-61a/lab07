@@ -49,77 +49,75 @@ def print_success(message):
 
 # TESTS
 
-def test_remove_all():
-    l1 = lab.Link(0, lab.Link(2, lab.Link(2, lab.Link(3, lab.Link(1, lab.Link(2, lab.Link(3)))))))
-    lab.remove_all(l1, 2)
-    assert str(l1) == '<0 3 1 3>'
-    lab.remove_all(l1, 3)
-    assert str(l1) == '<0 1>'
+def test_height():
+    t = lab.Tree(3, [lab.Tree(5, [lab.Tree(1)]), lab.Tree(2)])
+    assert lab.height(t) == 2
+    t = lab.Tree(3, [lab.Tree(1), lab.Tree(2, [lab.Tree(5, [lab.Tree(6)]), lab.Tree(1)])])
+    assert lab.height(t) == 3
 
 
-def test_slice_link():
-    link = lab.Link(3, lab.Link(1, lab.Link(4, lab.Link(1, lab.Link(5, lab.Link(9))))))
-    new = lab.slice_link(link, 1, 4)
-    assert str(new) == '<1 4 1>'
+def test_max_path_sum():
+    t = lab.Tree(1, [lab.Tree(5, [lab.Tree(1), lab.Tree(3)]), lab.Tree(10)])
+    assert lab.max_path_sum(t) == 11
 
 
-def test_store_digits():    
-    s = lab.store_digits(1)
-    assert str(s) == str(lab.Link(1))
-    assert str(lab.store_digits(2345)) == str(lab.Link(2, lab.Link(3, lab.Link(4, lab.Link(5)))))
-    assert str(lab.store_digits(876)) == str(lab.Link(8, lab.Link(7, lab.Link(6))))
-
-    # ban str and reversed
-    search = re.sub(r"#.*\\n", '', re.sub(r'"{3}[\s\S]*?"{3}', '', inspect.getsource(lab.store_digits)))
-    print_error("str and/or reversed detected; please implement wihtout using.") if any([r in search for r in ["str", "reversed"]]) else None
+def test_find_path():
+    t = lab.Tree(2, [lab.Tree(7, [lab.Tree(3), lab.Tree(6, [lab.Tree(5), lab.Tree(11)])]), lab.Tree(15)])
+    assert lab.find_path(t, 5) == [2, 7, 6, 5]
+    assert lab.find_path(t, 10) is None
     
 
-def test_every_other():
-    l = lab.Link('a', lab.Link('b', lab.Link('c', lab.Link('d'))))
-    lab.every_other(l)
-    assert l.first == 'a'
-    assert l.rest.first == 'c'
-    assert l.rest.rest is lab.Link.empty
-    s = lab.Link(1, lab.Link(2, lab.Link(3, lab.Link(4))))
-    lab.every_other(s)
-    assert str(s) == str(lab.Link(1, lab.Link(3)))
-    odd_length = lab.Link(5, lab.Link(3, lab.Link(1)))
-    lab.every_other(odd_length)
-    assert str(odd_length) == str(lab.Link(5, lab.Link(1)))
-    singleton = lab.Link(4)
-    lab.every_other(singleton)
-    assert str(singleton) == str(lab.Link(4))
+def test_prune_small():
+    t1 = lab.Tree(6)
+    lab.prune_small(t1, 2)
+    assert repr(t1) == "Tree(6)"
+    t2 = lab.Tree(6, [lab.Tree(3), lab.Tree(4)])
+    lab.prune_small(t2, 1)
+    assert repr(t2) == "Tree(6, [Tree(3)])"
+    t3 = lab.Tree(6, [lab.Tree(1), lab.Tree(3, [lab.Tree(1), lab.Tree(2), lab.Tree(3)]), lab.Tree(5, [lab.Tree(3), lab.Tree(4)])])
+    lab.prune_small(t3, 2)
+    assert repr(t3) == "Tree(6, [Tree(1), Tree(3, [Tree(1), Tree(2)])])"
 
 
-def test_duplicate_link():
-    x = lab.Link(5, lab.Link(4, lab.Link(3)))
-    lab.duplicate_link(x, 5)
-    assert str(x) == str(lab.Link(5, lab.Link(5, lab.Link(4, lab.Link(3)))))
-    y = lab.Link(2, lab.Link(4, lab.Link(6, lab.Link(8))))
-    lab.duplicate_link(y, 10)
-    assert str(y) == str(lab.Link(2, lab.Link(4, lab.Link(6, lab.Link(8)))))
-    z = lab.Link(1, lab.Link(2, (lab.Link(2, lab.Link(3)))))
-    lab.duplicate_link(z, 2)
-    assert str(z) == str(lab.Link(1, lab.Link(2, lab.Link(2, lab.Link(2, lab.Link(2, lab.Link(3)))))))
+def test_cumulative_mul():
+    t = lab.Tree(1, [lab.Tree(3, [lab.Tree(5)]), lab.Tree(7)])
+    lab.cumulative_mul(t)
+    assert repr(t) == "Tree(105, [Tree(15, [Tree(5)]), Tree(7)])"
+    otherTree = lab.Tree(2, [lab.Tree(1, [lab.Tree(3), lab.Tree(4), lab.Tree(5)]), lab.Tree(6, [lab.Tree(7)])])
+    lab.cumulative_mul(otherTree)
+    assert repr(otherTree) == "Tree(5040, [Tree(60, [Tree(3), Tree(4), Tree(5)]), Tree(42, [Tree(7)])])"
 
 
-def test_deep_map():
-    l = lab.Link(1, lab.Link(lab.Link(2, lab.Link(3)), lab.Link(4)))
-    assert str(lab.deep_map(lambda x: x * x, l)) == '<1 <4 9> 16>'
-    assert str(l) == '<1 <2 3> 4>'
-    assert str(lab.deep_map(lambda x: 2 * x, lab.Link(l, lab.Link(lab.Link(lab.Link(5)))))) == '<<2 <4 6> 8> <<10>>>'
+def test_d_leaves():
+    t_one_to_four = lab.Tree(1, [lab.Tree(2), lab.Tree(3, [lab.Tree(4)])])
+    lab.d_leaves(t_one_to_four, 5)
+    assert repr(t_one_to_four) == "Tree(1, [Tree(2, [Tree(5)]), Tree(3, [Tree(4, [Tree(5), Tree(5)]), Tree(5)])])"
+    t1 = lab.Tree(1, [lab.Tree(3)])
+    lab.d_leaves(t1, 4)
+    assert repr(t1) == "Tree(1, [Tree(3, [Tree(4)])])"
+    t2 = lab.Tree(2, [lab.Tree(5), lab.Tree(6)])
+    t3 = lab.Tree(3, [t1, lab.Tree(0), t2])
+    lab.d_leaves(t3, 10)
+    assert repr(t3) == "Tree(3, [Tree(1, [Tree(3, [Tree(4, [Tree(10), Tree(10), Tree(10)]), Tree(10), Tree(10)]), Tree(10)]), Tree(0, [Tree(10)]), Tree(2, [Tree(5, [Tree(10), Tree(10)]), Tree(6, [Tree(10), Tree(10)]), Tree(10)])])"
 
 
-def test_link_pop():
-    lnk = lab.Link(1, lab.Link(2, lab.Link(3, lab.Link(4, lab.Link(5)))))
-    removed = lab.link_pop(lnk)
-    assert removed == 5
-    assert str(lnk) == '<1 2 3 4>'
-    assert lab.link_pop(lnk, 2) == 3
-    assert str(lnk) == '<1 2 4>'
-    assert lab.link_pop(lnk) == 4
-    assert lab.link_pop(lnk) == 2
-    assert str(lnk) == '<1>'
+def test_has_path():
+    greetings = lab.Tree('h', [lab.Tree('i'), lab.Tree('e', [lab.Tree('l', [lab.Tree('l', [lab.Tree('o')])]), lab.Tree('y')])])
+    assert lab.has_path(greetings, 'h')
+    assert not lab.has_path(greetings, 'i')
+    assert lab.has_path(greetings, 'hi')
+    assert lab.has_path(greetings, 'hello')
+    assert lab.has_path(greetings, 'hey')
+    assert not lab.has_path(greetings, 'bye')
+    assert not lab.has_path(greetings, 'hint')
+
+
+def test_add_trees():
+    numbers = lab.Tree(1, [lab.Tree(2, [lab.Tree(3), lab.Tree(4)]),lab.Tree(5, [lab.Tree(6, [lab.Tree(7)]), lab.Tree(8)])])
+    assert repr(lab.add_trees(numbers, numbers)) == "Tree(2, [Tree(4, [Tree(6), Tree(8)]), Tree(10, [Tree(12, [Tree(14)]), Tree(16)])])"
+    assert repr(lab.add_trees(lab.Tree(2), lab.Tree(3, [lab.Tree(4), lab.Tree(5)]))) == "Tree(5, [Tree(4), Tree(5)])"
+    assert repr(lab.add_trees(lab.Tree(2, [lab.Tree(3)]), lab.Tree(2, [lab.Tree(3), lab.Tree(4)]))) == "Tree(4, [Tree(6), Tree(4)])"
+    assert repr(lab.add_trees(lab.Tree(2, [lab.Tree(3, [lab.Tree(4), lab.Tree(5)])]), lab.Tree(2, [lab.Tree(3, [lab.Tree(4)]), lab.Tree(5)]))) == "Tree(4, [Tree(6, [Tree(8), Tree(5)]), Tree(5)])"
 
 
 # CHECK WWPD? IS ALL COMPLETE
@@ -127,10 +125,10 @@ def test_link_pop():
 wwpd_complete = True
 
 def test_wwpd():
-    if len(st) != 7 or not all([i[4] for i in st]):
+    if len(st) != 8 or not all([i[4] for i in st]):
         print_error("WWPD? is incomplete.")
         wwpd_complete = False
-    assert len(st) == 7
+    assert len(st) == 8
     assert all([i[4] for i in st])
 
 
@@ -142,7 +140,7 @@ def test_commit():
     try:
         # IF CHANGES ARE MADE, COMMIT TO GITHUB
         user.append(input("\n\nWhat is your GitHub username (exact match, case sensitive)?\n"))
-        repo = git.Repo("/workspaces/lab06-" + user[0])
+        repo = git.Repo("/workspaces/lab07-" + user[0])
         repo.git.add('--all')
         repo.git.commit('-m', 'update lab')
         origin = repo.remote(name='origin')
