@@ -143,10 +143,10 @@ tr.branches.append(Tree(4, [Tree(8)]))
 
 trees_qs = [
     [1, "", ">>> t = Tree(1, Tree(2))", "error"],
-    [2, ">>> t = Tree(1, [Tree(2)])", ">>> t.label", str(t.label)]
+    [2, ">>> t = Tree(1, [Tree(2)])", ">>> t.label", str(t.label)], 
     [3, "", ">>> t.branches[0]", repr(t.branches[0])],
     [4, "", ">>> t.branches[0].label", str(t.branches[0].label)],
-    [5, ">>> t.label = t.branches[0].label", "t", "Tree(2, [Tree(2)])"]
+    [5, ">>> t.label = t.branches[0].label", "t", "Tree(2, [Tree(2)])"], 
     [6, ">>> t.branches.append(Tree(4, [Tree(8)]))", ">>> len(t.branches)", "2"],
     [7, "", ">>> t.branches[0]", repr(tr.branches[0])],
     [8, "", ">>> t.branches[1]", repr(tr.branches[1])]
